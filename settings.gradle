@@ -1,0 +1,4 @@
+include 'eureka-echo-client'
+include 'eureka-uppercase-client'
+include 'eureka-server'
+
