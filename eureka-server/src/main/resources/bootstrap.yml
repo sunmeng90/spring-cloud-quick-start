@@ -1,7 +1,6 @@
 spring:
   application:
-    name: Eureka-Server
-#  cloud:
-#    config:
-#      uri: https://github.com/sunmeng90/spring-cloud-config-repo.git #uri: ${CONFIG_SERVER_URL:http://localhost:8888}
-#      label: master
+    name: eureka-server
+  cloud:
+    config:
+      enabled: false #don't fetch config from config server

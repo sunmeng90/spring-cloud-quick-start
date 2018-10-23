@@ -1,4 +1,5 @@
-include 'eureka-echo-client'
-include 'eureka-uppercase-client'
+include 'eureka-echo-service'
+include 'eureka-uppercase-service'
 include 'eureka-server'
+include 'config-server'
 

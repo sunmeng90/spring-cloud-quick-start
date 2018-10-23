@@ -44,8 +44,15 @@ subprojects {
             mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Finchley.SR1'
         }
     }
-
+    configurations {
+        developmentOnly
+        runtimeClasspath {
+            extendsFrom developmentOnly
+        }
+    }
     dependencies {
+        compile 'org.springframework.boot:spring-boot-starter-actuator'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
         compile 'org.springframework.boot:spring-boot-starter-web'
         compile 'org.springframework.cloud:spring-cloud-starter-config'
         testCompile 'org.springframework.boot:spring-boot-starter-test'
@@ -55,4 +62,8 @@ subprojects {
     task wrapper(type: Wrapper) {
         gradleVersion = '4.10.2'
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10.2'
 }
