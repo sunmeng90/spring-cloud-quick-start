@@ -12,7 +12,7 @@ public class EchoApi {
 
     @GetMapping
     public ResponseEntity<String> echo(@RequestParam("name") String name) {
-        return ResponseEntity.ok().body("Greetings, " + name);
+        return ResponseEntity.ok().body(name);
     }
 
 }

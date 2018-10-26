@@ -33,9 +33,11 @@ Eureka server cluster mock config:
 127.0.0.1  eurekapeer2
 ```
 
-
 **Eureka self-preservation:** <font color='red'>EMERGENCY! EUREKA MAY BE INCORRECTLY CLAIMING INSTANCES ARE UP WHEN THEY'RE NOT. RENEWALS ARE LESSER THAN THRESHOLD AND HENCE THE INSTANCES ARE NOT BEING EXPIRED JUST TO BE SAFE.</font>
 [Server Self Preservation Mode](https://github.com/Netflix/eureka/wiki/Server-Self-Preservation-Mode)
+
+##Client load balancing with ribbon
+
 
 Issue: 
 # Q: Eureka Client application shutdown immediately after start up and registration?
