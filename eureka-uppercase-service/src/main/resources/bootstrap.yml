@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: eureka-uppercase-service
+  cloud:
+    config:
+      enabled: false #don't fetch config from config server, use local config
