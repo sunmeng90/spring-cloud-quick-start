@@ -26,7 +26,16 @@ spring:
       enabled: false #don't fetch config from config server, use local config
 
 ```
+Eureka server cluster mock config: 
+```
+127.0.0.1  eurekapeer0
+127.0.0.1  eurekapeer1
+127.0.0.1  eurekapeer2
+```
 
+
+**Eureka self-preservation:** <font color='red'>EMERGENCY! EUREKA MAY BE INCORRECTLY CLAIMING INSTANCES ARE UP WHEN THEY'RE NOT. RENEWALS ARE LESSER THAN THRESHOLD AND HENCE THE INSTANCES ARE NOT BEING EXPIRED JUST TO BE SAFE.</font>
+[Server Self Preservation Mode](https://github.com/Netflix/eureka/wiki/Server-Self-Preservation-Mode)
 
 Issue: 
 # Q: Eureka Client application shutdown immediately after start up and registration?

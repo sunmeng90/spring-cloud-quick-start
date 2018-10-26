@@ -1,0 +1,10 @@
+server:
+  port: 8081
+eureka:
+  instance:
+    hostname: eurekapeer1
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    service-url:
+      defaultZone: http://eurekapeer0:8080/eureka,http://eurekapeer2:8082/eureka
