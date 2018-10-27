@@ -1,13 +1,11 @@
 server:
-  port: 9002
-
+  port: 9800
 eureka:
   client:
     fetch-registry: false
     register-with-eureka: true
     service-url:
       defaultZone: http://eurekapeer0:8080/eureka,http://eurekapeer1:8081/eureka,http://eurekapeer2:8082/eureka
-
 management:
   security:
     enable: false

@@ -39,7 +39,7 @@ Eureka server cluster mock config:
 ##Client load balancing with ribbon
 
 1. Error `No instances available for eureka-echo-service`
-The load balance will check health of service by ping, you can set dummy ping to skip for set the specific available health check url, otherwise, the service will not be marked as available.
+The load balance will check health of service by ping, you can set dummy ping to skip or set the specific available health check url, otherwise, the service will not be marked as available.
 ```java
 public class UppercaseRibbonConfiguration {
 
