@@ -2,5 +2,6 @@ include 'eureka-echo-service'
 include 'eureka-uppercase-service'
 include 'eureka-server'
 include 'config-server'
-include 'greeting-app'
+include 'echo-app'
+include 'uppercase-app'
 

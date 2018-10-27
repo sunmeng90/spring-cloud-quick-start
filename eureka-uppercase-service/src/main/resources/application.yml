@@ -21,3 +21,11 @@ info:
     name: 'uppercase service'
     description: 'Simple uppercase service'
     version: ${version}
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.cloud: DEBUG
+    com.netflix: DEBUG
+    org.hibernate: DEBUG
+    org.meng.cloud: DEBUG

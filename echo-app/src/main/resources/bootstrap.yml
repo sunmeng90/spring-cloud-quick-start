@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: greeting-app
+  cloud:
+    config:
+      enabled: false #don't fetch config from config server
+server:
+  port: 9900
+
+ribbon:
+  eureka:
+    enabled: false
+
+eureka-echo-service:
+  ribbon:
+    listOfServers: http://localhost:9000
+    ReadTimeout: 2000

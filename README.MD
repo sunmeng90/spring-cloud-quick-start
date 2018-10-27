@@ -38,6 +38,43 @@ Eureka server cluster mock config:
 
 ##Client load balancing with ribbon
 
+1. Error `No instances available for eureka-echo-service`
+The load balance will check health of service by ping, you can set dummy ping to skip for set the specific available health check url, otherwise, the service will not be marked as available.
+```java
+public class UppercaseRibbonConfiguration {
+
+    @Autowired
+    IClientConfig clientConfig;
+
+    @Bean
+    public IPing ribbonPing(IClientConfig clientConfig) {
+        return new DummyPing();//skip ping
+    }
+
+    @Bean
+    public IRule ribbonRule(IClientConfig clientConfig) {
+        return new RoundRobinRule();
+    }
+}
+//or
+public class EchoServiceRibbonConfiguration {
+
+    @Autowired
+    IClientConfig ribbonClientConfig;
+
+    @Bean
+    public IPing ribbonPing(IClientConfig ribbonClientConfig) {
+//        return new PingUrl();//In case the base url doesn't has a response, the service will be marked as not available
+        return new PingUrl(false, "/actuator/info");//set up health, otherwise service can not be found
+    }
+
+    @Bean
+    public IRule ribbonRule(IClientConfig ribbonClientConfig) {
+        return new RoundRobinRule();
+    }
+}
+```
+
 
 Issue: 
 # Q: Eureka Client application shutdown immediately after start up and registration?
