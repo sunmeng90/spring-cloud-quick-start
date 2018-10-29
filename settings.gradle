@@ -3,5 +3,6 @@ include 'eureka-uppercase-service'
 include 'eureka-server'
 include 'config-server'
 include 'echo-app'
-include 'uppercase-app'
+include 'uppercase-ribbon-without-eureka-app'
+include 'uppercase-ribbon-with-eureka-app'
 

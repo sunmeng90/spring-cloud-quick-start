@@ -37,6 +37,14 @@ Eureka server cluster mock config:
 [Server Self Preservation Mode](https://github.com/Netflix/eureka/wiki/Server-Self-Preservation-Mode)
 
 ##Client load balancing with ribbon
+The consumer need to list all the service instance address:
+```yaml
+#bootstrap.yml
+eureka-uppercase-service:
+  ribbon:
+    listOfServers: http://localhost:9800,http://localhost:9801,http://localhost:9802
+    ReadTimeout: 2000
+```
 
 1. Error `No instances available for eureka-echo-service`
 The load balance will check health of service by ping, you can set dummy ping to skip or set the specific available health check url, otherwise, the service will not be marked as available.
@@ -74,6 +82,60 @@ public class EchoServiceRibbonConfiguration {
     }
 }
 ```
+##Client load balancing with ribbon and use eureka to get service server list
+The consumer need to know the eureka registry server and need discovery client enabled
+```yaml
+#bootstrap.yaml
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://eurekapeer0:8080/eureka,http://eurekapeer1:8081/eureka,http://eurekapeer2:8082/eureka
+
+```
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class UppercaseWithEurekaApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(UppercaseWithEurekaApplication.class);
+    }
+}
+```
+
+##How to get the service instances info or selected service instance info
+```java
+@Slf4j
+@RestController
+@RequestMapping("api/service-instances")
+public class ServiceInstanceApi {
+
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
+    @Autowired
+    private LoadBalancerClient loadBalancerClient;
+
+    @RequestMapping("/{applicationName}")
+    public List<ServiceInstance> serviceInstancesByApplicationName(
+            @PathVariable String applicationName) {
+        return this.discoveryClient.getInstances(applicationName);
+    }
+
+    @GetMapping("/{applicationName}/current")
+    public String logUserInstance(@PathVariable String applicationName) {
+        ServiceInstance serviceInstance = this.loadBalancerClient.choose(applicationName);
+        log.info("{}:{}:{}", serviceInstance.getServiceId(), serviceInstance.getHost(), serviceInstance.getPort());
+        return serviceInstance.toString();
+    }
+}
+
+```
+##the difference of use eureka or not are:  
+1. using eureka, the discovery client can get service instances from eureka registry server  
+2. without eureka, the application need list all the service instances address  
+The ribbon will select one instance using different load balance rule  
 
 
 Issue: 
