@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: uppercase-app
+  cloud:
+    config:
+      enabled: false #don't fetch config from config server
+server:
+  port: 9810
+
+ribbon:
+  eureka:
+    enabled: false
+
+eureka-uppercase-service:
+  ribbon:
+    listOfServers: http://localhost:9800,http://localhost:9801,http://localhost:9802
+    ReadTimeout: 2000
