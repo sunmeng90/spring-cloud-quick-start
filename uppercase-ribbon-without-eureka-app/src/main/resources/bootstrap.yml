@@ -1,6 +1,6 @@
 spring:
   application:
-    name: uppercase-app
+    name: uppercase-ribbon-without-eureka-app
   cloud:
     config:
       enabled: false #don't fetch config from config server
