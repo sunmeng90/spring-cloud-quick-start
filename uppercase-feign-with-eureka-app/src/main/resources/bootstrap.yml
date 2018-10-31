@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: uppercase-feign-with-eureka-app
+  cloud:
+    config:
+      enabled: false #don't fetch config from config server
+server:
+  port: 9812
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://eurekapeer0:8080/eureka,http://eurekapeer1:8081/eureka,http://eurekapeer2:8082/eureka

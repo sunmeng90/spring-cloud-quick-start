@@ -137,6 +137,45 @@ public class ServiceInstanceApi {
 2. without eureka, the application need list all the service instances address  
 The ribbon will select one instance using different load balance rule  
 
+##Declarative webclient with feign
+1. Feign is a declarative web service client. It makes writing web service clients easier. To use Feign create an interface and annotate it. 
+2. Feign use ribbon and eureka under the hood for load balancing. **Spring Cloud integrates Ribbon and Eureka to provide a load balanced http client when using Feign.**
+
+```java
+//--------------enable feign client--------------
+@SpringBootApplication
+@EnableFeignClients //will scan feign client, can specify scan base packages
+@EnableDiscoveryClient
+public class UppercaseApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(UppercaseApplication.class);
+    }
+}
+//-----------------feign client------------------
+@FeignClient(name = "eureka-uppercase-service", qualifier = "uppercaseServiceFeignClient")
+public interface UppercaseServiceFeignClient {
+
+    @GetMapping(value = "api/uppercase")
+    String uppercase(@RequestParam(name = "name") String name);
+}
+
+//-------------------inject feign client to consumer----------
+@RestController
+@RequestMapping("api/uppercase")
+public class UppercaseAppApi {
+
+    @Autowired
+    @Qualifier("uppercaseServiceFeignClient")
+    private UppercaseServiceFeignClient uppercaseServiceFeignClient;
+
+    @GetMapping
+    public ResponseEntity<String> greeting(@RequestParam("name") String name) {
+        return ResponseEntity.ok().body("Greeting, " + uppercaseServiceFeignClient.uppercase(name));
+    }
+}
+
+```
 
 Issue: 
 # Q: Eureka Client application shutdown immediately after start up and registration?
