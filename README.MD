@@ -176,6 +176,32 @@ public class UppercaseAppApi {
 }
 
 ```
+##Feign Hystrix Support(Circuit Breaker)
+Hystrix uses circuit break pattern to gracefully degrade functionality when a method call fails. Use of the Circuit Breaker pattern can allow a microservice to continue operating when a related service fails, preventing the failure from cascading and giving the failing service time to recover.   
+1. add dependency of Hystrix(`compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')`)
+2. enable hystrix `feign.hystrix.enabled=true`
+3. create fallback implementation and register with feign client
+```java
+//fallback
+@Component
+public class UppercaseServiceFeignClientFallback implements UppercaseServiceFeignClient {
+
+    @Override
+    public String uppercase(String name) {
+        return "Fallback " + name;
+    }
+}
+
+//feign client
+@FeignClient(name = "eureka-uppercase-service", qualifier = "uppercaseServiceFeignClient", fallback = UppercaseServiceFeignClientFallback.class)
+public interface UppercaseServiceFeignClient {
+
+    @GetMapping(value = "api/uppercase")
+    String uppercase(@RequestParam(name = "name") String name);
+}
+
+
+```
 
 Issue: 
 # Q: Eureka Client application shutdown immediately after start up and registration?
