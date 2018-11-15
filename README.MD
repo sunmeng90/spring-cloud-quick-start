@@ -36,7 +36,7 @@ Eureka server cluster mock config:
 **Eureka self-preservation:** <font color='red'>EMERGENCY! EUREKA MAY BE INCORRECTLY CLAIMING INSTANCES ARE UP WHEN THEY'RE NOT. RENEWALS ARE LESSER THAN THRESHOLD AND HENCE THE INSTANCES ARE NOT BEING EXPIRED JUST TO BE SAFE.</font>
 [Server Self Preservation Mode](https://github.com/Netflix/eureka/wiki/Server-Self-Preservation-Mode)
 
-##Client load balancing with ribbon
+## Client load balancing with ribbon
 The consumer need to list all the service instance address:
 ```yaml
 #bootstrap.yml
@@ -82,7 +82,7 @@ public class EchoServiceRibbonConfiguration {
     }
 }
 ```
-##Client load balancing with ribbon and use eureka to get service server list
+## Client load balancing with ribbon and use eureka to get service server list
 The consumer need to know the eureka registry server and need discovery client enabled
 ```yaml
 #bootstrap.yaml
@@ -104,7 +104,7 @@ public class UppercaseWithEurekaApplication {
 }
 ```
 
-##How to get the service instances info or selected service instance info
+## How to get the service instances info or selected service instance info
 ```java
 @Slf4j
 @RestController
@@ -132,12 +132,12 @@ public class ServiceInstanceApi {
 }
 
 ```
-##the difference of use eureka or not are:  
+## the difference of use eureka or not are:  
 1. using eureka, the discovery client can get service instances from eureka registry server  
 2. without eureka, the application need list all the service instances address  
 The ribbon will select one instance using different load balance rule  
 
-##Declarative webclient with feign
+## Declarative webclient with feign
 1. Feign is a declarative web service client. It makes writing web service clients easier. To use Feign create an interface and annotate it. 
 2. Feign use ribbon and eureka under the hood for load balancing. **Spring Cloud integrates Ribbon and Eureka to provide a load balanced http client when using Feign.**
 
@@ -176,7 +176,7 @@ public class UppercaseAppApi {
 }
 
 ```
-##Feign Hystrix Support(Circuit Breaker)
+## Feign Hystrix Support(Circuit Breaker)
 Hystrix uses circuit break pattern to gracefully degrade functionality when a method call fails. Use of the Circuit Breaker pattern can allow a microservice to continue operating when a related service fails, preventing the failure from cascading and giving the failing service time to recover.   
 1. add dependency of Hystrix(`compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')`)
 2. enable hystrix `feign.hystrix.enabled=true`
@@ -199,9 +199,60 @@ public interface UppercaseServiceFeignClient {
     @GetMapping(value = "api/uppercase")
     String uppercase(@RequestParam(name = "name") String name);
 }
-
-
 ```
+
+# Circuit Breaker with hystrix
+## How to
+```java
+//1. enable circuit breaker
+@SpringBootApplication
+@EnableCircuitBreaker
+public class UppercaseApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(UppercaseApplication.class);
+    }
+}
+
+//2. add hystrix command and config breaker strategy and fallback method
+//3. create fallback method
+@Service
+public class UppercaseService {
+    private RestTemplate restTemplate;
+    private String UPPERCASE_URL = "http://EUREKA-UPPERCASE-SERVICE";//service id is uppercase in eureka registry server
+
+    @Autowired
+    public UppercaseService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    //Will create proxy, so avoid inner call
+    @HystrixCommand(fallbackMethod = "defaultGetUppercaseName", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+    })
+    public String getUppercaseName(String name) {
+        int waitInMilliSeconds = new Random().nextInt(2) * 1000;
+        try{
+            log.info("waiting for {} milliseconds", waitInMilliSeconds);
+            Thread.sleep(waitInMilliSeconds);
+        } catch (InterruptedException e) {
+            log.error("thread interrupted", e);
+        }
+        ResponseEntity<String> resp = restTemplate.getForEntity(UPPERCASE_URL + "/api/uppercase?name=" + name, String.class);
+        return resp.getBody();
+    }
+
+    public String defaultGetUppercaseName(String name){
+        log.info("Call fallback method");
+        return "defaultGetUppercaseName: "+ StringUtils.upperCase(name);
+    }
+}
+```
+
+**Note:** When the Spring framework sees the `@HystrixCommand`, it will dynamically generate a proxy that will wrapper the method and manage all calls to that method through a thread pool of threads specifically set aside to handle remote calls.
+## How hystrix works
+![hystrix-command-flow-chart](/doc/img/hystrix-command-flow-chart.png)
+[How hystrix Works](https://github.com/Netflix/Hystrix/wiki/How-it-Works)
 
 Issue: 
 # Q: Eureka Client application shutdown immediately after start up and registration?
