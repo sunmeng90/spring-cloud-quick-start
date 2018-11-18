@@ -6,9 +6,3 @@ logging:
     com.netflix: DEBUG
     org.hibernate: DEBUG
     org.meng.cloud: DEBUG
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: hystrix.stream
