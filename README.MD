@@ -248,6 +248,34 @@ public class UppercaseService {
     }
 }
 ```
+#Hystrix dashboard
+1. Application should expose hystrix metrics stream endpoint by add:
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+```
+2. Create hystrix dashboard
+```groovy
+dependencies{
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard')
+}
+```
+```java
+@SpringBootApplication
+@EnableHystrixDashboard
+public class HystrixDashboardMonitor {
+
+    public static void main(String[] args) {
+        SpringApplication.run(HystrixDashboardMonitor.class);
+    }
+}
+```
+Access dashboard UI: http://localhost:9980/hystrix and input the stream endpoint url of application to get the graphic metrics
 
 **Note:** When the Spring framework sees the `@HystrixCommand`, it will dynamically generate a proxy that will wrapper the method and manage all calls to that method through a thread pool of threads specifically set aside to handle remote calls.
 ## How hystrix works

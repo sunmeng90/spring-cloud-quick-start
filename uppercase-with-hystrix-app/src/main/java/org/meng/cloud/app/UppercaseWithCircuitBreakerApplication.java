@@ -6,9 +6,9 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 
 @SpringBootApplication
 @EnableCircuitBreaker
-public class UppercaseApplication {
+public class UppercaseWithCircuitBreakerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UppercaseApplication.class);
+        SpringApplication.run(UppercaseWithCircuitBreakerApplication.class);
     }
 }
