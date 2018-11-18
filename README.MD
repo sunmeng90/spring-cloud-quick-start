@@ -248,7 +248,14 @@ public class UppercaseService {
     }
 }
 ```
-#Hystrix dashboard
+
+**Note:** When the Spring framework sees the `@HystrixCommand`, it will dynamically generate a proxy that will wrapper the method and manage all calls to that method through a thread pool of threads specifically set aside to handle remote calls.
+## How hystrix works
+![hystrix-command-flow-chart](/doc/img/hystrix-command-flow-chart.png)
+[How hystrix Works](https://github.com/Netflix/Hystrix/wiki/How-it-Works)
+
+
+# Hystrix dashboard
 1. Application should expose hystrix metrics stream endpoint by add:
 ```yaml
 management:
@@ -277,10 +284,6 @@ public class HystrixDashboardMonitor {
 ```
 Access dashboard UI: http://localhost:9980/hystrix and input the stream endpoint url of application to get the graphic metrics
 
-**Note:** When the Spring framework sees the `@HystrixCommand`, it will dynamically generate a proxy that will wrapper the method and manage all calls to that method through a thread pool of threads specifically set aside to handle remote calls.
-## How hystrix works
-![hystrix-command-flow-chart](/doc/img/hystrix-command-flow-chart.png)
-[How hystrix Works](https://github.com/Netflix/Hystrix/wiki/How-it-Works)
 
 Issue: 
 # Q: Eureka Client application shutdown immediately after start up and registration?
