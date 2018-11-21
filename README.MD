@@ -337,6 +337,10 @@ public class ZuulGateWayApplication {
 ```  
 User can get the routes mapping to different service call by access endpoints: http://localhost:9999/actuator/routes
 
+## how to call target service via api gateway
+1. call service gateway url and append with target service id and resource segment http://localhost:9999/eureka-uppercase-service/api/uppercase?name=abc
+2. the gateway itself can also be registered in eureka server and load balanced. the client will call target service by: http://{gateway-service-id}/{target-service-id}/{resource-segment} e.g. http://SERVICE-GATEWAY-WITH-ZUUL/eureka-uppercase-service/api/uppercase?name=abc
+
 Issue: 
 # Q: Eureka Client application shutdown immediately after start up and registration?
 Answer: client is not web application, add dependency below
