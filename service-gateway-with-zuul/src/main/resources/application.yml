@@ -1,0 +1,8 @@
+logging:
+  level:
+    org.springframework: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.cloud: DEBUG
+    com.netflix: DEBUG
+    org.hibernate: DEBUG
+    org.meng.cloud: DEBUG
