@@ -276,7 +276,6 @@ dependencies{
 @SpringBootApplication
 @EnableHystrixDashboard
 public class HystrixDashboardMonitor {
-
     public static void main(String[] args) {
         SpringApplication.run(HystrixDashboardMonitor.class);
     }
@@ -284,6 +283,59 @@ public class HystrixDashboardMonitor {
 ```
 Access dashboard UI: http://localhost:9980/hystrix and input the stream endpoint url of application to get the graphic metrics
 
+# Service gateway with zuul
+Zuul can be used as service gateway to :
+1. route service client call to difference targets
+2. intercept service client call and apply cross-cutting concerns such as authentication, authorization, metrics collection and logging
+3. ...
+
+## How to enable zuul
+```groovy
+dependencies{
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-zuul')
+}
+```
+```yaml
+#bootstrap.yml
+spring:
+  application:
+    name: service-gateway-with-zuul
+  cloud:
+    config:
+      enabled: false #don't fetch config from config server
+server:
+  port: 9999
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eurekapeer0:8080/eureka,http://eurekapeer1:8081/eureka,http://eurekapeer2:8082/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*' #include the routes and filter endpoints
+  endpoint:
+    routes:
+      enabled: true
+    filters:
+      enabled: true
+
+```
+```java
+@SpringBootApplication
+@EnableZuulProxy
+@EnableDiscoveryClient
+public class ZuulGateWayApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ZuulGateWayApplication.class);
+    }
+}
+```  
+User can get the routes mapping to different service call by access endpoints: http://localhost:9999/actuator/routes
 
 Issue: 
 # Q: Eureka Client application shutdown immediately after start up and registration?

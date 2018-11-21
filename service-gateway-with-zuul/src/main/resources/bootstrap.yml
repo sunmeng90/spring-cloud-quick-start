@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: service-gateway-with-zuul
+  cloud:
+    config:
+      enabled: false #don't fetch config from config server
+server:
+  port: 9999
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eurekapeer0:8080/eureka,http://eurekapeer1:8081/eureka,http://eurekapeer2:8082/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*' #include the routes and filter endpoints
+  endpoint:
+    routes:
+      enabled: true
+    filters:
+      enabled: true
